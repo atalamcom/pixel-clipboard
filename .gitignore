@@ -1,0 +1,17 @@
+/.tooling/
+/build/
+/dist/
+/legacy/
+/.codex/
+/.agents/
+/.aws/
+/.idea/
+/.vscode/
+*.lnk
+*.class
+*.log
+*.tmp
+.env
+.env.*
+state*.json
+app.lock
