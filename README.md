@@ -2,7 +2,7 @@
 
 A small Windows desktop checklist with a wooden pixel-art frame, parchment pages, and a bundled pixel font.
 
-Maintained by **[atalamcom](https://github.com/atalamcom)**, with development assistance from **ChatGPT by OpenAI**.
+Maintained by **[atalamcom](https://github.com/atalamcom)**, with development assistance from **ChatGPT by OpenAI** including art and coding everything in this repo.
 
 **Inspiration:** the clipboard idea from the **BiblioCraft** Minecraft mod.
 
