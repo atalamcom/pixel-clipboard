@@ -24,6 +24,7 @@ For a portable copy, download the ZIP from the same release, extract it, and lau
 - Press **Backspace** on an empty task to delete it. Use **Ctrl+Shift+Z** to undo.
 - Click the heading to rename the current page. Each page saves its own title; new pages start as "Checklist".
 - Use **>>** to create or open the next page. Pages remain available when you go back or reopen the app.
+- Click the page number (or press **Ctrl+G**), type a page, and press **Enter** to jump there. Missing pages are created automatically; **Escape** cancels.
 - Drag the wooden surround to move the window; drag its edges to resize it.
 - Open the wooden gear at the lower-left for Settings, keep-on-top, and keyboard shortcuts.
 
@@ -42,6 +43,7 @@ Task text sits directly on the parchment. Entry tooltips and an Add button are u
 | Ctrl+Shift+D | Delete the task |
 | Ctrl+Shift+Z | Undo deletion |
 | Ctrl+PageUp / Ctrl+PageDown | Previous / next page |
+| Ctrl+G | Type a page number and press Enter to jump |
 | Ctrl+P | Toggle keep-on-top |
 | F1 | Open Settings |
 | Escape | Finish task editing or cancel a title edit |

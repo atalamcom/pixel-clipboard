@@ -73,7 +73,7 @@ final class ClipboardPanel extends JPanel {
     final JButton close = button("X", false);
     private final JButton previous = button("<<", false);
     private final JButton next = button(">>", false);
-    private final JLabel pageLabel = new JLabel("", SwingConstants.CENTER);
+    private final JTextField pageLabel = new JTextField();
     private final List<TaskRow> rows = new ArrayList<>();
     private final Deque<Deleted> deleted = new ArrayDeque<>();
     private int capacity = 8;
@@ -133,6 +133,35 @@ final class ClipboardPanel extends JPanel {
         next.setToolTipText("Next page (Ctrl+Page Down)");
         pageLabel.setFont(UI);
         pageLabel.setForeground(INK);
+        pageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        pageLabel.setOpaque(false);
+        pageLabel.setBorder(BorderFactory.createEmptyBorder());
+        pageLabel.setCaretColor(INK);
+        pageLabel.setSelectionColor(new Color(0xDBC79C));
+        pageLabel.setSelectedTextColor(INK);
+        pageLabel.getAccessibleContext().setAccessibleName("Page number; press Enter to jump");
+        pageLabel.addFocusListener(new FocusAdapter() {
+            @Override public void focusGained(FocusEvent event) {
+                pageLabel.setText(Integer.toString(state.page + 1));
+                pageLabel.selectAll();
+            }
+            @Override public void focusLost(FocusEvent event) { refreshPageNumber(); }
+        });
+        pageLabel.addActionListener(event -> {
+            try {
+                int number = Integer.parseInt(pageLabel.getText().trim());
+                if (number < 1 || number == Integer.MAX_VALUE) throw new NumberFormatException();
+                goToPage(number - 1);
+            } catch (NumberFormatException exception) {
+                java.awt.Toolkit.getDefaultToolkit().beep();
+                pageLabel.setText(Integer.toString(state.page + 1));
+                pageLabel.selectAll();
+            }
+        });
+        bindKey(pageLabel,"ESCAPE","cancel-page",() -> {
+            requestFocusInWindow();
+            refreshPageNumber();
+        });
         for (Component control : new Component[] {heading, settings, minimize, close, previous, next, pageLabel}) add(control);
         for (JButton frameButton : new JButton[] {minimize, close}) {
             frameButton.setForeground(new Color(0xF9E1B1));
@@ -149,6 +178,10 @@ final class ClipboardPanel extends JPanel {
         bindKey(this, "control shift Z", "undo-delete", this::undoDelete);
         bindKey(this, "control PAGE_UP", "previous", () -> changePage(-1));
         bindKey(this, "control PAGE_DOWN", "next", () -> changePage(1));
+        bindKey(this, "control G", "jump-page", () -> {
+            pageLabel.requestFocusInWindow();
+            pageLabel.selectAll();
+        });
         bindKey(this, "control P", "pin", togglePin);
         bindKey(this, "F1", "settings", this::showSettings);
         getInputMap(WHEN_FOCUSED).put(KeyStroke.getKeyStroke("ENTER"),"new");
@@ -333,7 +366,7 @@ final class ClipboardPanel extends JPanel {
         for (int i = 0; i < rows.size(); i++) {
             rows.get(i).bind(i < visible.size() ? visible.get(i) : null);
         }
-        pageLabel.setText((state.page + 1) + " / " + pageCount());
+        if (!pageLabel.isFocusOwner()) refreshPageNumber();
         previous.setEnabled(state.page > 0);
         next.setEnabled(true);
         repaint();
@@ -483,7 +516,20 @@ final class ClipboardPanel extends JPanel {
 
     void changePage(int delta) {
         int page = Math.max(0, state.page + delta);
-        if (page == state.page) return;
+        goToPage(page);
+    }
+
+    private void refreshPageNumber() {
+        pageLabel.setText((state.page + 1) + " / " + pageCount());
+    }
+
+    private void goToPage(int page) {
+        if (page < 0 || page == Integer.MAX_VALUE) return;
+        if (page == state.page) {
+            requestFocusInWindow();
+            refreshPageNumber();
+            return;
+        }
         state.pageCount = Math.max(state.pageCount,page + 1);
         state.page = page;
         renderRows();
