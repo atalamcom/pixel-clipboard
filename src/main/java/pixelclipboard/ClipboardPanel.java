@@ -417,7 +417,11 @@ final class ClipboardPanel extends JPanel {
         JButton windowsSetup = button("WINDOWS SETUP",true);
         windowsSetup.setToolTipText("Install the app and choose Start menu or desktop shortcuts");
         windowsSetup.addActionListener(event -> { dialog.dispose(); AppInstallation.openSetup(this); });
-        body.add(windowsSetup,BorderLayout.SOUTH);
+        JPanel pageActions = new JPanel(new GridLayout(0,1,0,10)); pageActions.setOpaque(false);
+        JButton deletePage = button("DELETE CURRENT PAGE...",true);
+        deletePage.addActionListener(event -> { dialog.dispose(); confirmDeletePage(); });
+        pageActions.add(deletePage); pageActions.add(windowsSetup);
+        body.add(pageActions,BorderLayout.SOUTH);
         content.add(body,BorderLayout.CENTER);
         JPanel actions = new JPanel(new GridLayout(1,2,12,0)); actions.setOpaque(false);
         JButton undo = button("UNDO DELETE",true); undo.setEnabled(!deleted.isEmpty());
@@ -427,6 +431,75 @@ final class ClipboardPanel extends JPanel {
         dialog.setContentPane(content);
         dialog.getRootPane().registerKeyboardAction(event -> dialog.dispose(),KeyStroke.getKeyStroke("ESCAPE"),JComponent.WHEN_IN_FOCUSED_WINDOW);
         dialog.pack(); dialog.setLocationRelativeTo(this); dialog.setVisible(true);
+    }
+
+    private void confirmDeletePage() {
+        int page = state.page;
+        int number = page + 1;
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(this),"Delete page",java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setUndecorated(true);
+        JPanel content = new JPanel(new BorderLayout(0,16));
+        content.setBackground(new Color(0xF2E7CE));
+        content.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(0x754326),5),BorderFactory.createEmptyBorder(18,18,18,18)));
+        JPanel message = new JPanel(new GridLayout(0,1,0,10)); message.setOpaque(false);
+        String[] lines = {"DELETE PAGE " + number + "?", "All tasks and the heading will be removed.", "This cannot be undone.",
+                state.pageCount == 1 ? "One blank Checklist page will remain." : "Following pages will move back one number.",
+                "Type " + number + " below, then click DELETE PAGE."};
+        for (String text : lines) {
+            JLabel label = new JLabel(text); label.setFont(UI); label.setForeground(INK); message.add(label);
+        }
+        content.add(message,BorderLayout.NORTH);
+        JTextField confirmation = new JTextField(); confirmation.setFont(UI);
+        confirmation.setForeground(INK); confirmation.setBackground(new Color(0xE8D7B4));
+        confirmation.getAccessibleContext().setAccessibleName("Type page " + number + " to confirm deletion");
+        content.add(confirmation,BorderLayout.CENTER);
+        JPanel actions = new JPanel(new GridLayout(1,2,12,0)); actions.setOpaque(false);
+        JButton cancel = button("CANCEL",true); cancel.addActionListener(event -> dialog.dispose());
+        JButton remove = button("DELETE PAGE",true); remove.setEnabled(false);
+        confirmation.getDocument().addDocumentListener(new DocumentListener() {
+            private void update() { remove.setEnabled(confirmation.getText().equals(Integer.toString(number))); }
+            @Override public void insertUpdate(DocumentEvent event) { update(); }
+            @Override public void removeUpdate(DocumentEvent event) { update(); }
+            @Override public void changedUpdate(DocumentEvent event) { update(); }
+        });
+        remove.addActionListener(event -> {
+            if (state.page == page && confirmation.getText().equals(Integer.toString(number))) {
+                deleteCurrentPage(); dialog.dispose();
+            }
+        });
+        actions.add(cancel); actions.add(remove); content.add(actions,BorderLayout.SOUTH);
+        dialog.setContentPane(content);
+        dialog.getRootPane().setDefaultButton(cancel);
+        dialog.getRootPane().registerKeyboardAction(event -> dialog.dispose(),KeyStroke.getKeyStroke("ESCAPE"),JComponent.WHEN_IN_FOCUSED_WINDOW);
+        dialog.pack(); dialog.setLocationRelativeTo(this); dialog.setVisible(true);
+    }
+
+    private void deleteCurrentPage() {
+        finishTitleEditing();
+        int removedPage = state.page;
+        state.tasks.removeIf(task -> task.page == removedPage);
+        for (AppState.Task task : state.tasks) if (task.page > removedPage) task.page--;
+        Map<Integer,String> remainingTitles = new java.util.LinkedHashMap<>();
+        if (removedPage != 0) remainingTitles.put(0,state.title);
+        state.pageTitles.forEach((page,text) -> {
+            if (page != removedPage) remainingTitles.put(page > removedPage ? page - 1 : page,text);
+        });
+        state.title = remainingTitles.getOrDefault(0,AppState.DEFAULT_TITLE);
+        state.pageTitles.clear();
+        remainingTitles.forEach((page,text) -> { if (page > 0) state.pageTitles.put(page,text); });
+        state.pageCount = Math.max(1,state.pageCount - 1);
+        state.page = Math.min(removedPage,state.pageCount - 1);
+        deleted.clear();
+        updatingHeading = true;
+        try {
+            headingPage = state.page;
+            heading.setText(state.titleForPage(headingPage));
+            heading.setFont(PixelFonts.forText(heading.getText()).deriveFont(24f));
+            titleBeforeEditing = heading.getText();
+        } finally { updatingHeading = false; }
+        renderRows();
+        changed.run();
+        requestFocusInWindow();
     }
 
     void addTask() {
