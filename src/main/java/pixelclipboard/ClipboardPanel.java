@@ -80,6 +80,8 @@ final class ClipboardPanel extends JPanel {
     private int taskTop = 90;
     private double rowPitch = 36;
     private String titleBeforeEditing;
+    private int headingPage;
+    private boolean updatingHeading;
 
     private record Deleted(AppState.Task task, int index) {}
 
@@ -94,7 +96,8 @@ final class ClipboardPanel extends JPanel {
         javax.swing.UIManager.put("MenuItem.selectionBackground",new Color(0xE3D1AB));
         javax.swing.UIManager.put("MenuItem.selectionForeground",INK);
         heading.setFont(PixelFonts.at(24));
-        heading.setText(state.title);
+        headingPage = state.page;
+        heading.setText(state.titleForPage(headingPage));
         heading.setHorizontalAlignment(SwingConstants.CENTER);
         heading.setForeground(INK);
         heading.setCaretColor(INK);
@@ -104,7 +107,12 @@ final class ClipboardPanel extends JPanel {
         heading.setSelectedTextColor(INK);
         heading.getAccessibleContext().setAccessibleName("Checklist title");
         heading.getDocument().addDocumentListener(new DocumentListener() {
-            private void update() { state.title = heading.getText(); heading.setFont(PixelFonts.forText(state.title).deriveFont(24f)); changed.run(); }
+            private void update() {
+                if (updatingHeading) return;
+                state.setPageTitle(headingPage, heading.getText());
+                heading.setFont(PixelFonts.forText(heading.getText()).deriveFont(24f));
+                changed.run();
+            }
             @Override public void insertUpdate(DocumentEvent event) { update(); }
             @Override public void removeUpdate(DocumentEvent event) { update(); }
             @Override public void changedUpdate(DocumentEvent event) { update(); }
@@ -155,9 +163,9 @@ final class ClipboardPanel extends JPanel {
 
     private void finishTitleEditing() {
         String title = heading.getText().trim();
-        if (title.isEmpty()) title = "CHECKLIST";
+        if (title.isEmpty()) title = AppState.DEFAULT_TITLE;
         if (!heading.getText().equals(title)) heading.setText(title);
-        state.title = title;
+        state.setPageTitle(headingPage, title);
     }
 
     boolean isTaskArea(java.awt.Point point) {
@@ -311,6 +319,16 @@ final class ClipboardPanel extends JPanel {
     void renderRows() {
         arrangePages();
         state.page = Math.max(0, Math.min(state.page, pageCount() - 1));
+        if (headingPage != state.page) {
+            finishTitleEditing();
+            headingPage = state.page;
+            updatingHeading = true;
+            try {
+                heading.setText(state.titleForPage(headingPage));
+                heading.setFont(PixelFonts.forText(heading.getText()).deriveFont(24f));
+                titleBeforeEditing = heading.getText();
+            } finally { updatingHeading = false; }
+        }
         List<AppState.Task> visible = pageTasks(state.page);
         for (int i = 0; i < rows.size(); i++) {
             rows.get(i).bind(i < visible.size() ? visible.get(i) : null);

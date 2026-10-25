@@ -16,7 +16,9 @@ final class AppState {
 
     final List<Task> tasks = new ArrayList<>();
     boolean topmost;
-    String title = "CHECKLIST";
+    static final String DEFAULT_TITLE = "Checklist";
+    String title = DEFAULT_TITLE;
+    final Map<Integer, String> pageTitles = new LinkedHashMap<>();
     Rectangle bounds = new Rectangle(-1, -1, 420, 600);
     boolean hasPosition;
     int page;
@@ -46,6 +48,16 @@ final class AppState {
         }
         state.topmost = Boolean.TRUE.equals(map.get("topmost"));
         if (map.get("title") instanceof String title && !title.isBlank()) state.title = title;
+        if (map.get("pageTitles") instanceof Map<?, ?> titles) {
+            for (var entry : titles.entrySet()) {
+                try {
+                    int page = Integer.parseInt(String.valueOf(entry.getKey()));
+                    if (page > 0 && entry.getValue() instanceof String text && !text.isBlank()) {
+                        state.pageTitles.put(page, text);
+                    }
+                } catch (NumberFormatException ignored) { }
+            }
+        }
         state.bounds = new Rectangle(number(map.get("x"), -1), number(map.get("y"), -1),
                 Math.max(360, number(map.get("width"), 420)), Math.max(490, number(map.get("height"), 600)));
         state.hasPosition = map.get("x") instanceof Number && map.get("y") instanceof Number;
@@ -64,12 +76,15 @@ final class AppState {
 
     String toJson() {
         Map<String, Object> map = new LinkedHashMap<>();
-        map.put("version", 4);
+        map.put("version", 5);
         List<Map<String, Object>> items = new ArrayList<>();
         for (Task task : tasks) items.add(Map.of("text", task.text, "done", task.done, "page", task.page));
         map.put("tasks", items);
         map.put("topmost", topmost);
         map.put("title", title);
+        Map<String, String> titles = new LinkedHashMap<>();
+        pageTitles.forEach((page, text) -> titles.put(Integer.toString(page), text));
+        map.put("pageTitles", titles);
         map.put("x", hasPosition ? bounds.x : null);
         map.put("y", hasPosition ? bounds.y : null);
         map.put("width", bounds.width);
@@ -77,5 +92,14 @@ final class AppState {
         map.put("page", page);
         map.put("pageCount", pageCount);
         return Json.write(map) + System.lineSeparator();
+    }
+
+    String titleForPage(int page) {
+        return page == 0 ? title : pageTitles.getOrDefault(page, DEFAULT_TITLE);
+    }
+
+    void setPageTitle(int page, String text) {
+        if (page == 0) title = text;
+        else pageTitles.put(page, text);
     }
 }

@@ -22,7 +22,7 @@ For a portable copy, download the ZIP from the same release, extract it, and lau
 - Click unused paper below your tasks to create the next entry, even if the previous entry is empty.
 - Press **Enter** to insert another task below the one you are editing.
 - Press **Backspace** on an empty task to delete it. Use **Ctrl+Shift+Z** to undo.
-- Click the heading to rename the checklist. Your title is saved.
+- Click the heading to rename the current page. Each page saves its own title; new pages start as "Checklist".
 - Use **>>** to create or open the next page. Pages remain available when you go back or reopen the app.
 - Drag the wooden surround to move the window; drag its edges to resize it.
 - Open the wooden gear at the lower-left for Settings, keep-on-top, and keyboard shortcuts.

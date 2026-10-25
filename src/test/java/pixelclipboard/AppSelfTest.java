@@ -247,6 +247,6 @@ public final class AppSelfTest {
         check(AppState.fromJson(state.toJson()).title.equals("My tasks"),"Custom title persists after reopening");
         panel.heading.setText(" ");
         panel.heading.postActionEvent();
-        check(state.title.equals("CHECKLIST"),"An empty heading falls back to CHECKLIST");
+        check(state.title.equals("Checklist"),"An empty heading falls back to Checklist");
     }
 }
