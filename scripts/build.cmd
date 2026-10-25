@@ -38,6 +38,6 @@ if exist "%PACKAGE%" (
 "%JDK%\bin\jpackage.exe" --type app-image --name PixelClipboard --app-version "%APP_VERSION%" --vendor "atalamcom" --description "A resizable pixel-art desktop checklist" --dest "%PACKAGE_ROOT%" --input "%BUILD%\input" --main-jar pixelclipboard.jar --main-class pixelclipboard.PixelClipboard --icon "%PROJECT%\src\main\resources\assets\clipboard.ico" --add-modules java.desktop --java-options "-Dfile.encoding=UTF-8" --jlink-options "--strip-debug --no-header-files --no-man-pages --compress=2"
 if errorlevel 1 exit /b 1
 copy /y "%PROJECT%\docs\USAGE.txt" "%PACKAGE%\README.txt" >nul
-copy /y "%PROJECT%\src\main\resources\fonts\OFL.txt" "%PACKAGE%\Silkscreen-OFL.txt" >nul
+copy /y "%PROJECT%\src\main\resources\fonts\OFL.txt" "%PACKAGE%\Minecraft-Font-OFL.txt" >nul
 echo Built %PACKAGE%\PixelClipboard.exe
 exit /b 0

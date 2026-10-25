@@ -9,7 +9,7 @@ Pixel Clipboard uses Java Swing and the JDK only. There are no Maven, Gradle, or
 - `AppState`: task/page/title model and compatible save-file conversion.
 - `StateStore`: UTF-8 reads, atomic saves, backup recovery, preservation of damaged files.
 - `Json`: strict JSON codec used by the state store.
-- `PixelFonts`: bundled Silkscreen font and a fallback for multilingual text.
+- `PixelFonts`: bundled Minecraft font and a fallback for multilingual text.
 - `AppInstallation`: finds the matching native installer or opens the project's release page.
 
 ## Commands

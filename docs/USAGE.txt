@@ -2,7 +2,7 @@ PIXEL CLIPBOARD 2.4 - JAVA DESKTOP APP
 ====================================
 
 START
-  Run PixelClipboard-Setup-2.4.0.exe to install as a normal Windows app.
+  Run PixelClipboard-Setup-2.4.1.exe to install as a normal Windows app.
   Choose whether to add Start menu and desktop shortcuts during setup.
   Windows Installed apps will contain the installed application.
   Or launch PixelClipboard.exe directly from the portable app folder.
@@ -83,10 +83,10 @@ BUILD FROM SOURCE
   Run package-installer.cmd with WiX 3.14.1 available to build the installer.
 
 RUNTIME
-  Silkscreen pixel font, Copyright 2001 The Silkscreen Project Authors,
+  Minecraft pixel font recreation, Copyright (c) 2022, Idrees Hassan,
   distributed under the SIL Open Font
-  License. See Silkscreen-OFL.txt in the packaged app. Font source:
-    https://github.com/google/fonts/tree/main/ofl/silkscreen
+  License. See Minecraft-Font-OFL.txt in the packaged app. Font source:
+    https://github.com/IdreesInc/Minecraft-Font
 
   The bundled Microsoft Build of OpenJDK includes its license and legal
   notices in dist\PixelClipboard\runtime\legal\.

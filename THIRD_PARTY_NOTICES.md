@@ -4,13 +4,15 @@
 
 Pixel Clipboard was inspired by the clipboard idea from the BiblioCraft Minecraft mod.
 
-## Silkscreen
+## Minecraft Font
 
-Copyright 2001 The Silkscreen Project Authors.
+Copyright (c) 2022, Idrees Hassan.
 
-Silkscreen is distributed under the SIL Open Font License 1.1. The complete license is included at [`src/main/resources/fonts/OFL.txt`](src/main/resources/fonts/OFL.txt) and copied into packaged Windows applications as `Silkscreen-OFL.txt`.
+Minecraft Font is distributed under the SIL Open Font License 1.1. The complete license is included at [`src/main/resources/fonts/OFL.txt`](src/main/resources/fonts/OFL.txt) and copied into packaged Windows applications as `Minecraft-Font-OFL.txt`.
 
-Font source: https://github.com/google/fonts/tree/main/ofl/silkscreen
+Font source: https://github.com/IdreesInc/Minecraft-Font
+
+This is an independent recreation of Minecraft's UI typeface, not an official Mojang font or an asset extracted from the game.
 
 ## Java runtime
 

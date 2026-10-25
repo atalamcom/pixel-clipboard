@@ -88,7 +88,7 @@ public final class AppSelfTest {
                         if (child instanceof JTextField field) {
                             check(child.getX() + child.getWidth() <= row.getWidth(),"Editor stays inside row");
                             check(!field.isOpaque(),"Task fields must blend into the parchment");
-                            check(field.getFont().getFamily().equals("Silkscreen"),"Use the bundled pixel font");
+                            check(field.getFont().getFamily().equals("Minecraft"),"Use the bundled pixel font");
                         }
                     }
                 }

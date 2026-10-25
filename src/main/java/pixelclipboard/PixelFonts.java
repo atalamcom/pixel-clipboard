@@ -9,7 +9,7 @@ final class PixelFonts {
     private PixelFonts() {}
 
     private static Font load() {
-        try (var stream = PixelFonts.class.getResourceAsStream("/fonts/Silkscreen-Regular.ttf")) {
+        try (var stream = PixelFonts.class.getResourceAsStream("/fonts/Minecraft.otf")) {
             if (stream == null) throw new IOException("Missing pixel font");
             return Font.createFont(Font.TRUETYPE_FONT,stream);
         } catch (IOException | FontFormatException exception) {
