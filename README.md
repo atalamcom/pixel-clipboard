@@ -6,11 +6,6 @@ Maintained by **[atalamcom](https://github.com/atalamcom)**, with development as
 
 **Inspiration:** the clipboard idea from the **BiblioCraft** Minecraft mod.
 
-## Contributors
-
-- **[atalamcom](https://github.com/atalamcom)** — project owner, direction, design feedback, and maintainer.
-- **ChatGPT by OpenAI** — AI development assistance with Java implementation, bug fixes, documentation, and packaging.
-
 ![Pixel Clipboard](docs/screenshot.png)
 
 ## Install on Windows
