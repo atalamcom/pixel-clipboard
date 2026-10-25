@@ -10,7 +10,7 @@ Maintained by **[atalamcom](https://github.com/atalamcom)**, with development as
 
 ## Install on Windows
 
-Download **PixelClipboard-Setup-2.4.1.exe** from [Releases](https://github.com/atalamcom/pixel-clipboard/releases/latest).
+Download **PixelClipboard-Setup-2.4.2.exe** from [Releases](https://github.com/atalamcom/pixel-clipboard/releases/latest).
 
 The per-user installer adds Pixel Clipboard to Windows **Installed apps** and lets you choose **Start menu** and **desktop** shortcuts. It includes Java, so you do not need to install Java separately. You can also open **Settings → Windows Setup** inside the portable app to launch its nearby installer or visit the download page.
 
@@ -70,7 +70,7 @@ To create the Windows installer, put **WiX Toolset 3.14.1** on `PATH` or extract
 package-installer.cmd
 ```
 
-The installer is generated at `dist\PixelClipboard-Setup-2.4.1.exe`. `test.cmd headless` runs the data, shortcut, and layout checks without opening a window. Full tests use isolated test data.
+The installer is generated at `dist\PixelClipboard-Setup-2.4.2.exe`. `test.cmd headless` runs the data, shortcut, and layout checks without opening a window. Full tests use isolated test data.
 
 ## Project layout
 
